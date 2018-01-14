@@ -1,0 +1,14 @@
+{
+    "name": "Service Worker Push Notification test",
+    "short_name": "Push",
+    "icons": [
+        {
+            "src": "images/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "gcm_sender_id": "123190773384"
+}

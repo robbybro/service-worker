@@ -1,11 +1,15 @@
 'use strict';
 
+import axios from 'axios';
 import express from 'express';
-import middleware from './middleware';
 import morgan from 'morgan';
 import path from 'path';
 import webpack from 'webpack';
 import bodyParser from 'body-parser';
+
+import manifest from './manifest.json';
+import middleware from './middleware';
+import secrets from './secrets';
 
 process.on('uncaughtException', function(err) {
     console.error(
@@ -52,13 +56,49 @@ if (isDeveloping) {
     app.use(express.static(path.resolve(__dirname, 'dist')));
 }
 
+let registrationId;
+
 app.get('/title', function(req, res) {
     return res.json({
-        title: 'Hello World!',
+        title: 'App is online!',
     });
 });
+
+app.get('/manifest.json', (req, res) => {
+    return res.send(manifest);
+});
+
+app.post('/push-notification-endpoint', (req, res) => {
+    const endpoint = req.body.endpoint.split('/');
+    const tmp = endpoint[endpoint.length - 1];
+    if (registrationId !== tmp) {
+        registrationId = tmp;
+        res.send(`registration id updated to ${registrationId}`);
+    }
+});
+
+app.get('*', middleware);
 
 app.listen(port, function() {
     console.log('Project Running');
 });
-app.get('*', middleware);
+
+// send a new push notification every 10 seconds (lol so annoying)
+// setInterval(() => {
+//     console.log('checking for registration id', registrationId);
+//     if (registrationId) {
+//         console.log('attempting to send a push notification');
+//         axios
+//             .post('https://android.googleapis.com/gcm/send', {
+//                 headers: {
+//                     Authorization: `key=${secrets.serverKey}`,
+//                     'Content-Type': 'application/json',
+//                 },
+//                 data: {
+//                     registration_ids: [registrationId],
+//                 },
+//             })
+//             .then(res => console.log)
+//             .catch(err => console.error);
+//     }
+// }, 10000);

@@ -3,10 +3,15 @@ import axios from 'axios';
 
 export function getTitle(title: string) {
     return (dispatch: Function) => {
-        axios.get('/title').then((res: any) => {
-            console.log(res);
-            dispatch(getTitleSuccess(res.data.title));
-        });
+        axios
+            .get('/title')
+            .then((res: any) => {
+                dispatch(getTitleSuccess(res.data.title));
+            })
+            .catch(err => {
+                console.log(err);
+                dispatch(getTitleSuccess('Warning: offline!'));
+            });
     };
 }
 

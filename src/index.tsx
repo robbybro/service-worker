@@ -5,6 +5,7 @@ import { connect, Provider } from 'react-redux';
 import App from './components/App/App';
 import { getTitle } from './actions/app';
 import store from './store';
+import serviceWorkerBootstrap from './serviceWorkerBootstrap';
 
 const mapStateToProps = (state:any, props:any) => {
     return { ...state, ...props };
@@ -35,3 +36,5 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
     });
     module.hot.accept('./components/App/App', () => render());
 }
+
+serviceWorkerBootstrap();

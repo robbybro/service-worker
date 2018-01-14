@@ -1,11 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const srcPath = path.resolve(__dirname, 'src');
 module.exports = {
     devtool: 'source-map',
     target: 'web',
-    entry: ['webpack-hot-middleware/client', srcPath + '/index.tsx'],
+    entry: [
+        'webpack-hot-middleware/client',
+        srcPath + '/index.tsx',
+        './manifest.json',
+    ],
     output: {
         path: srcPath,
         filename: 'bundle.js',
@@ -20,6 +25,7 @@ module.exports = {
                 WEBPACK: true,
             },
         }),
+        new ExtractTextPlugin('manifest.json'),
     ],
     module: {
         loaders: [
